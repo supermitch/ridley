@@ -3,25 +3,30 @@ import os
 import praw
 
 
-def get_reddit(client, secret, username, password):
-    reddit = praw.Reddit(
+def get_reddit(client, secret, user, password):
+    return praw.Reddit(
         client_id=client,
         client_secret=secret,
-        username=username,
+        username=user,
         password=password,
-        user_agent='Script <Ridley> by /u/{}'.format(username),
+        user_agent='python:ridley:0.1 (by /u/{})'.format(user),
     )
-    return redit
 
 
 def main():
-    username = os.environ['REDDIT_USER']
-    password = os.environ['REDDIT_PASS']
-    client = os.environ['REDDIT_CLIENT']
-    secret = os.environ['REDDIT_SECRET']
+    user = os.environ['USER']
+    password = os.environ['PWD']
+    client = os.environ['CLIENT']
+    secret = os.environ['SECRET']
 
-    redit = get_reddit(client, secret, username, password)
-    print(redit.user)
+    reddit = get_reddit(client, secret, user, password)
+
+    redditor = reddit.redditor(user)
+    print(redditor.link_karma)  # Output: users's karma
+
+    for sub in reddit.redditor(user).submissions:
+        print(sub)
+
 
 if __name__ == '__main__':
     main()
